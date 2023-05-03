@@ -7,9 +7,15 @@ set(STARTER_WINDOW_SRC
 )
 source_group("" FILES ${STARTER_WINDOW_SRC})
 
+if(MSVC)
 set(PLATFORM_SRC
     platform/win32_window.cpp
 )
+else()
+set(PLATFORM_SRC
+    platform/null_window.cpp
+)
+endif()
 source_group(platform FILES ${PLATFORM_SRC})
 
 list(APPEND SOURCE_FILES ${PLATFORM_SRC})
