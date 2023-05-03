@@ -1,4 +1,4 @@
-# blank-slate
+# window-starter
 [![build](https://github.com/McMassiveNZ/blank-slate/actions/workflows/ci.yml/badge.svg)](https://github.com/McMassiveNZ/blank-slate/actions/workflows/ci.yml)
 
-A blank slate cpp project containing boilerplate for CMake, testing and basic CI
+A window-starter cpp project which can open a simple window. The project contains boilerplate for CMake, testing and basic CI. Static Analysis, Unit Tests and Sanitizers are off by default
