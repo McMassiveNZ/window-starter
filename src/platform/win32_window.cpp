@@ -1,0 +1,123 @@
+#include "../window.h"
+
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
+#include <Windows.h>
+
+static LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+			return 0;
+		}
+
+		case WM_PAINT:
+		{
+			PAINTSTRUCT ps = {};
+			HDC hdc = BeginPaint(window, &ps);
+			FillRect(hdc, &ps.rcPaint, reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1));
+			EndPaint(window, &ps);
+			return 0;
+		}
+	}
+	return DefWindowProc(window, message, wParam, lParam);
+}
+
+namespace starter_window
+{
+
+class Win32WindowImpl : public Window
+{
+public:
+	Win32WindowImpl();
+	~Win32WindowImpl() override = default;
+
+	Win32WindowImpl(const Win32WindowImpl&) = delete;
+	Win32WindowImpl& operator=(const Win32WindowImpl&) = delete;
+
+	bool init(WindowCreateParams params);
+	bool PumpMessages() override;
+
+	HINSTANCE hInstance;
+	HWND hWnd;
+};
+
+Win32WindowImpl::Win32WindowImpl()
+	: hInstance(GetModuleHandle(NULL))
+	, hWnd(nullptr)
+{
+}
+
+bool Win32WindowImpl::init(WindowCreateParams params)
+{
+	const char className[] = "Win32WindowImpl";
+
+	WNDCLASSEX wc = {};
+
+	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wc.lpfnWndProc = WindowProc;
+	wc.hInstance = hInstance;
+	wc.lpszClassName = className;
+
+	if (RegisterClassEx(&wc) == NULL)
+	{
+		MessageBox(nullptr, "Call to RegisterClass failed", NULL, MB_OK);
+		return false;
+	}
+
+	HWND window = CreateWindowEx(
+		0,
+		className,
+		params.name,
+		WS_OVERLAPPEDWINDOW,
+		params.x, params.y, params.width, params.height,
+		NULL,
+		NULL,
+		hInstance,
+		NULL);
+
+	if (window == NULL)
+	{
+		MessageBox(nullptr, "Call to CreateWindow failed", NULL, MB_OK);
+		return false;
+	}
+
+	ShowWindow(window, SW_SHOW);
+	return true;
+}
+
+bool Win32WindowImpl::PumpMessages()
+{
+	MSG message = {};
+	if (GetMessage(&message, NULL, 0, 0) != 0)
+	{
+		TranslateMessage(&message);
+		DispatchMessage(&message);
+		return true;
+	}
+
+	// GetMessage returned WM_QUIT
+	return false;
+}
+} // namespace starter_window
+
+std::unique_ptr<starter_window::Window> swCreateWindow(starter_window::WindowCreateParams params)
+{
+	auto result = std::make_unique<starter_window::Win32WindowImpl>();
+	if (result->init(params) == false)
+	{
+		result = nullptr;
+	}
+
+	return result;
+}

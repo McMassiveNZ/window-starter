@@ -1,8 +1,20 @@
-#include <spdlog/spdlog.h>
+#include "window.h"
+
+constexpr int CW_USEDEFAULT = 0x80000000;
 
 auto main() -> int
 {
-    spdlog::trace("Hello, World!");
-	return 0;
+	auto window = swCreateWindow({
+		.x = CW_USEDEFAULT,
+		.y = CW_USEDEFAULT,
+		.width = CW_USEDEFAULT,
+		.height = CW_USEDEFAULT,
+		.name = "Starter Window"
+	});
+		
+	while (window->PumpMessages())
+	{
+		//do something
+	}
 }
 
