@@ -50,10 +50,10 @@ jobs:
           # ignoredPaths: ${{ github.workspace }}/dependencies;${{ github.workspace }}/test
 
       # Upload SARIF file to GitHub Code Scanning Alerts
-      #- name: Upload SARIF to GitHub
-      #  uses: github/codeql-action/upload-sarif@v2
-      #  with:
-      #    sarif_file: ${{ steps.run-analysis.outputs.sarif }}
+      - name: Upload SARIF to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ steps.run-analysis.outputs.sarif }}
 
       # Upload SARIF file as an Artifact to download and view
       #- name: Upload SARIF as an Artifact
