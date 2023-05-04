@@ -18,7 +18,8 @@ class Window
 {
 public:
 	virtual ~Window() = default;
-	virtual bool PumpMessages() = 0;
+	virtual void PumpMessages() = 0;
+	virtual bool ShouldClose() = 0;
 };
 
 }

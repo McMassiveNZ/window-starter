@@ -12,9 +12,9 @@ auto main() -> int
 		.name = "Starter Window"
 	});
 		
-	while (window->PumpMessages())
+	while (!window->ShouldClose())
 	{
-		//do something
+		window->PumpMessages();
 	}
 }
 

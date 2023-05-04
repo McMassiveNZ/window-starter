@@ -3,7 +3,7 @@
 namespace starter_window
 {
 
-class NullWindowImpl : public Window
+class NullWindowImpl final : public Window
 {
 public:
 	NullWindowImpl() = default;
@@ -14,7 +14,8 @@ public:
 	NullWindowImpl(const NullWindowImpl&) = delete;
 	NullWindowImpl& operator=(const NullWindowImpl&) = delete;
 
-	bool PumpMessages() override { return true; }
+	void PumpMessages() override {}
+	bool ShouldClose() override { return false; }
 
 };
 

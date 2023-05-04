@@ -35,7 +35,7 @@ static LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPA
 namespace starter_window
 {
 
-class Win32WindowImpl : public Window
+class Win32WindowImpl final : public Window
 {
 public:
 	Win32WindowImpl();
@@ -46,14 +46,17 @@ public:
 
 	bool init(WindowCreateParams params);
 	bool PumpMessages() override;
+	bool ShouldClose() override;
 
 	HINSTANCE hInstance;
 	HWND hWnd;
+	bool m_close;
 };
 
 Win32WindowImpl::Win32WindowImpl()
 	: hInstance(GetModuleHandle(NULL))
 	, hWnd(nullptr)
+	, m_close(false)
 {
 }
 
@@ -96,18 +99,24 @@ bool Win32WindowImpl::init(WindowCreateParams params)
 	return true;
 }
 
-bool Win32WindowImpl::PumpMessages()
+void Win32WindowImpl::PumpMessages()
 {
 	MSG message = {};
 	if (GetMessage(&message, NULL, 0, 0) != 0)
 	{
 		TranslateMessage(&message);
 		DispatchMessage(&message);
-		return true;
 	}
-
+	else
+	{
 	// GetMessage returned WM_QUIT
-	return false;
+		m_close = true;
+	}
+}
+
+bool Win32WindowImpl::ShouldClose()
+{
+
 }
 } // namespace starter_window
 
