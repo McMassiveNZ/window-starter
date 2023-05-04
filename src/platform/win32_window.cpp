@@ -45,7 +45,7 @@ public:
 	Win32WindowImpl& operator=(const Win32WindowImpl&) = delete;
 
 	bool init(WindowCreateParams params);
-	bool PumpMessages() override;
+	void PumpMessages() override;
 	bool ShouldClose() override;
 
 	HINSTANCE hInstance;
@@ -116,7 +116,7 @@ void Win32WindowImpl::PumpMessages()
 
 bool Win32WindowImpl::ShouldClose()
 {
-
+	return m_close;
 }
 } // namespace starter_window
 
