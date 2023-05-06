@@ -72,9 +72,9 @@ bool Win32WindowImpl::init(WindowCreateParams params)
 	wc.hInstance = hInstance;
 	wc.lpszClassName = className;
 
-	if (RegisterClassEx(&wc) == NULL)
+	if (RegisterClassEx(&wc) == 0)
 	{
-		MessageBox(nullptr, "Call to RegisterClass failed", NULL, MB_OK);
+		MessageBox(nullptr, "Call to RegisterClass failed", "Fatal Error", MB_OK);
 		return false;
 	}
 
@@ -84,14 +84,14 @@ bool Win32WindowImpl::init(WindowCreateParams params)
 		params.name,
 		WS_OVERLAPPEDWINDOW,
 		params.x, params.y, params.width, params.height,
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		hInstance,
-		NULL);
+		nullptr);
 
-	if (window == NULL)
+	if (window == nullptr)
 	{
-		MessageBox(nullptr, "Call to CreateWindow failed", NULL, MB_OK);
+		MessageBox(nullptr, "Call to CreateWindow failed", "Fatal Error", MB_OK);
 		return false;
 	}
 
