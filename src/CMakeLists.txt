@@ -26,6 +26,8 @@ add_executable(
     ${SOURCE_FILES}
 )
 
+target_include_directories(${current_target} PRIVATE .)
+
 if( ENABLE_ALL_REASONABLE_WARNINGS )
     MESSAGE("-- Additional Warnings Enabled")
     target_enable_warnings(${current_target})

@@ -1,4 +1,4 @@
-#include "../window.h"
+#include "window.h"
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -35,34 +35,43 @@ static LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPA
 namespace starter_window
 {
 
-class Win32WindowImpl final : public Window
+struct Win32WindowImpl final
 {
-public:
-	Win32WindowImpl();
-	~Win32WindowImpl() override = default;
-
-	Win32WindowImpl(const Win32WindowImpl&) = delete;
-	Win32WindowImpl& operator=(const Win32WindowImpl&) = delete;
-
-	bool init(WindowCreateParams params);
-	void PumpMessages() override;
-	bool ShouldClose() override;
-
-	HINSTANCE hInstance;
-	HWND hWnd;
+	HINSTANCE m_hInstance;
+	HWND m_hWnd;
 	bool m_close;
 };
 
-Win32WindowImpl::Win32WindowImpl()
-	: hInstance(GetModuleHandle(NULL))
-	, hWnd(nullptr)
-	, m_close(false)
+void PumpMessages(Win32WindowImpl& window)
 {
+	MSG message = {};
+	if (GetMessage(&message, NULL, 0, 0) != 0)
+	{
+		TranslateMessage(&message);
+		DispatchMessage(&message);
+	}
+	else
+	{
+		// GetMessage returned WM_QUIT
+		window.m_close = true;
+	}
 }
 
-bool Win32WindowImpl::init(WindowCreateParams params)
+bool ShouldClose(const Win32WindowImpl& window)
+{
+	return window.m_close;
+}
+} // namespace starter_window
+
+starter_window::Window swCreateWindow(starter_window::WindowCreateParams params)
 {
 	const char className[] = "Win32WindowImpl";
+	HINSTANCE hInstance = GetModuleHandle(NULL);
+	starter_window::Win32WindowImpl result = { 
+		.m_hInstance = nullptr, 
+		.m_hWnd = nullptr, 
+		.m_close = true 
+	};
 
 	WNDCLASSEX wc = {};
 
@@ -75,7 +84,7 @@ bool Win32WindowImpl::init(WindowCreateParams params)
 	if (RegisterClassEx(&wc) == 0)
 	{
 		MessageBox(nullptr, "Call to RegisterClass failed", "Fatal Error", MB_OK);
-		return false;
+		return result;
 	}
 
 	HWND window = CreateWindowEx(
@@ -92,41 +101,14 @@ bool Win32WindowImpl::init(WindowCreateParams params)
 	if (window == nullptr)
 	{
 		MessageBox(nullptr, "Call to CreateWindow failed", "Fatal Error", MB_OK);
-		return false;
+		return result;
 	}
 
 	ShowWindow(window, SW_SHOW);
-	return true;
-}
 
-void Win32WindowImpl::PumpMessages()
-{
-	MSG message = {};
-	if (GetMessage(&message, NULL, 0, 0) != 0)
-	{
-		TranslateMessage(&message);
-		DispatchMessage(&message);
-	}
-	else
-	{
-	// GetMessage returned WM_QUIT
-		m_close = true;
-	}
-}
-
-bool Win32WindowImpl::ShouldClose()
-{
-	return m_close;
-}
-} // namespace starter_window
-
-std::unique_ptr<starter_window::Window> swCreateWindow(starter_window::WindowCreateParams params)
-{
-	auto result = std::make_unique<starter_window::Win32WindowImpl>();
-	if (result->init(params) == false)
-	{
-		result = nullptr;
-	}
+	result.m_hInstance = hInstance;
+	result.m_hWnd = window;
+	result.m_close = false;
 
 	return result;
 }

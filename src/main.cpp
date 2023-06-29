@@ -12,9 +12,9 @@ auto main() -> int
 		.name = "Starter Window"
 	});
 		
-	while (!window->ShouldClose())
+	while (!ShouldClose(window))
 	{
-		window->PumpMessages();
+		PumpMessages(window);
 	}
 }
 
