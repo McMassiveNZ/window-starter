@@ -14,10 +14,16 @@ struct WindowCreateParams
 	const char* name;
 };
 
+template< typename T >
+concept IsWindow = requires(T t) {
+   PumpMessages(t);
+   ShouldClose(t);
+};
+
 class Window
 {
 public:
-	template<typename T>
+	template<IsWindow T>
 	Window(T t) 
 		: self{std::make_unique<model_t<T>>(std::move(t))}
 	{
