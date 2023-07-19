@@ -13,12 +13,12 @@ OPTION(ENABLE_WARNINGS_AS_ERRORS "Warnings are treated as Errors" ON)
 OPTION(ENABLE_STATIC_ANALYSIS "Enable Static Analysis Tools" OFF)
 OPTION(ENABLE_SANITIZERS "Enable Sanitizer Tools" OFF)
 
-set(CMAKE_SCRIPTS_DIR ${CMAKE_CURRENT_LIST_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-include(${CMAKE_SCRIPTS_DIR}/compilerwarnings.cmake)
-include(${CMAKE_SCRIPTS_DIR}/sanitizers.cmake)
-include(${CMAKE_SCRIPTS_DIR}/staticanalysis.cmake)
-include(${CMAKE_SCRIPTS_DIR}/cpm.cmake)
+include(compilerwarnings)
+include(sanitizers)
+include(staticanalysis)
+include(cpm)
 
 if (ENABLE_TESTS)
     message("-- Unit Testing Enabled")

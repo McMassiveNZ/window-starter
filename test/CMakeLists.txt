@@ -1,14 +1,15 @@
-include(${CMAKE_SCRIPTS_DIR}/googletest.cmake)
+include(gtest)
 set(current_target starter_window_test)
 
 add_executable(
   ${current_target}
-  test_main.cpp
+      test_main.cpp
 )
 
 target_link_libraries(
   ${current_target}
-  gtest_main
+  PRIVATE
+    gtest_main
 )
 
 include(GoogleTest)
