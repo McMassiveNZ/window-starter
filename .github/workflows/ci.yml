@@ -24,32 +24,26 @@ jobs:
 
         include:
           - os: 'windows-latest'
-            triplet: x64-windows
             compiler: llvm
             build_configuration: Debug
 
           - os: 'windows-latest'
-            triplet: x64-windows
             compiler: llvm
             build_configuration: Release
 
           - os: 'windows-latest'
-            triplet: x64-windows
             compiler: gcc
             build_configuration: Debug
 
           - os: 'windows-latest'
-            triplet: x64-windows
             compiler: gcc
             build_configuration: Release
 
           - os: 'windows-latest'
-            triplet: x64-windows
             compiler: msvc
             build_configuration: Debug
 
           - os: 'windows-latest'
-            triplet: x64-windows
             compiler: msvc
             build_configuration: Release
 
